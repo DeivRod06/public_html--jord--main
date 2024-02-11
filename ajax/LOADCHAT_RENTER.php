@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show the timestamp bubble
             timestampBubble.style.display = 'block';
         });
-
+   
         // Add a mouseout event listener to each 'details' element
         detailsElement.addEventListener('mouseout', function() {
             // Find the child element with the class 'timestamp-bubble' within the 'details' element

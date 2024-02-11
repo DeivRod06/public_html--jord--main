@@ -216,58 +216,84 @@ if ($resultRentalOptions->num_rows > 0) {
         <script src="/jscripts/chatBoxFeat.js"></script>
         
         <script>
-    $(document).ready(function () {
-        let land_id = '<?= $_SESSION['rentalOptionsData']["owner_user_id"] ?>';
+            $(document).ready(function () {
+                let land_id = '<?= $_SESSION['rentalOptionsData']["owner_user_id"] ?>';
 
-        // Function to send a message
-        function sendMessage() {
-            let chatmsg = $('#chatmsg').val();
+                // Flag to check if user manually scrolled up
+                let manualScroll = false;
 
-            $.post({
-                url: "../ajax/INSERTCHAT_RENTER.php",
-                data: { land_id: land_id, chatmsg: chatmsg }
-            }).done(function (data) {
-                if (data == "success") {
-                    $('#chatmsg').val('');
+                // Function to send a message
+                function sendMessage() {
+                    let chatmsg = $('#chatmsg').val();
+
+                    $.post({
+                        url: "../ajax/INSERTCHAT_RENTER.php",
+                        data: { land_id: land_id, chatmsg: chatmsg }
+                    }).done(function (data) {
+                        if (data == "success") {
+                            $('#chatmsg').val('');
+                            scrollToBottom(); // Scroll down after sending a new message
+                        }
+                        console.log(data);
+                    });
                 }
-                console.log(data);
+
+                // Click event for the send button
+                $('#btnSend').click(function () {
+                    sendMessage();
+                });
+
+                // Keypress event for the Enter key in the input field
+                $('#chatmsg').keypress(function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+
+                // Scroll event to detect manual scrolling
+                $('#loadchat').scroll(function () {
+                    manualScroll = ($('#loadchat').scrollTop() + $('#loadchat').innerHeight() < $('#loadchat')[0].scrollHeight);
+                });
+
+                // Periodic function to load chat messages
+                function loadChat() {
+                    $.post({
+                        url: "../ajax/LOADCHAT_RENTER.php",
+                        data: { land_id: land_id }
+                    }).done(function (data) {
+                        // Get the current scroll position
+                        let currentScroll = $('#loadchat').scrollTop();
+
+                        // Reverse the order of chat messages before inserting
+                        $('#loadchat').html(data);
+
+                        // If user has not manually scrolled up, scroll down
+                        if (!manualScroll) {
+                            scrollToBottom();
+                        } else {
+                            // If user manually scrolled up, maintain the scroll position
+                            $('#loadchat').scrollTop(currentScroll);
+                        }
+
+                        console.log(data);
+                    });
+                }
+
+                // Initial load of chat messages
+                loadChat();
+
+                // Periodic function to load chat messages
+                setInterval(function () {
+                    loadChat();
+                }, 1000);
+
+                function scrollToBottom() {
+                    $('#loadchat').scrollTop($('#loadchat')[0].scrollHeight);
+                }
             });
-        }
 
-        // Click event for the send button
-        $('#btnSend').click(function () {
-            sendMessage();
-        });
-
-        // Keypress event for the Enter key in the input field
-        $('#chatmsg').keypress(function (e) {
-            if (e.which == 13) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        // Periodic function to load chat messages
-        function loadChat() {
-            $.post({
-                url: "../ajax/LOADCHAT_RENTER.php",
-                data: { land_id: land_id }
-            }).done(function (data) {
-                // Reverse the order of chat messages before inserting
-                $('#loadchat').html(data).scrollTop($('#loadchat')[0].scrollHeight);
-                console.log(data);
-            });
-        }
-
-        // Initial load of chat messages
-        loadChat();
-
-        // Periodic function to load chat messages
-        setInterval(function () {
-            loadChat();
-        }, 1000);
-    });
-</script>
+        </script>
 
 
 <?php

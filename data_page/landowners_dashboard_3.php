@@ -41,7 +41,7 @@ if (mysqli_num_rows($sql) > 0) {
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-    <body>
+    <body class="chat-body">
         <section class="main">
             <div class="wrapper" id="container">
                 <header>
@@ -184,55 +184,81 @@ if (mysqli_num_rows($sql) > 0) {
         
 
         <script>
-    $(document).ready(function () {
-        let userid = '<?= $_GET['userid'] ?>';
+            $(document).ready(function () {
+                let userid = '<?= $_GET['userid'] ?>';
 
-        // Function to send a message
-        function sendMessage() {
-            let chatmsg = $('#chatmsg').val();
-            $.post({
-                url: "../ajax/INSERTCHAT_LANDOWNER.php",
-                data: { userid: userid, chatmsg: chatmsg }
-            }).done(function (data) {
-                if (data == "success") {
-                    $('#chatmsg').val('');
+                // Flag to check if user manually scrolled up
+                let manualScroll = false;
+
+                // Function to send a message
+                function sendMessage() {
+                    let chatmsg = $('#chatmsg').val();
+                    $.post({
+                        url: "../ajax/INSERTCHAT_LANDOWNER.php",
+                        data: { userid: userid, chatmsg: chatmsg }
+                    }).done(function (data) {
+                        if (data == "success") {
+                            $('#chatmsg').val('');
+                            scrollToBottom(); // Scroll down after sending a new message
+                        }
+                    });
+                }
+
+                // Keypress event for the Enter key in the input field
+                $(document).on("keypress", function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+
+                // Click event for the send button
+                $(document).on("click", "#btnSend", function () {
+                    sendMessage();
+                });
+
+                // Scroll event to detect manual scrolling
+                $('#loadchat').scroll(function () {
+                    manualScroll = ($('#loadchat').scrollTop() + $('#loadchat').innerHeight() < $('#loadchat')[0].scrollHeight);
+                });
+
+                // Periodic function to load chat messages
+                function loadChat() {
+                    // Get the current scroll position
+                    let currentScroll = $('#loadchat').scrollTop();
+
+                    $.post({
+                        url: "../ajax/LOADCHAT_LANDOWNER.php",
+                        data: { userid: userid }
+                    }).done(function (data) {
+                        // Reverse the order of chat messages before inserting
+                        $('#loadchat').html(data);
+
+                        // If user has not manually scrolled up, scroll down
+                        if (!manualScroll) {
+                            scrollToBottom();
+                        } else {
+                            // If user manually scrolled up, maintain the scroll position
+                            $('#loadchat').scrollTop(currentScroll);
+                        }
+                    });
+                }
+
+                // Initial load of chat messages
+                loadChat();
+
+                // Periodic function to load chat messages
+                setInterval(function () {
+                    loadChat();
+                }, 1000);
+
+                function scrollToBottom() {
+                    $('#loadchat').scrollTop($('#loadchat')[0].scrollHeight);
                 }
             });
-        }
+        </script>
 
-        // Keypress event for the Enter key in the input field
-        $(document).on("keypress", function (e) {
-            if (e.which == 13) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
 
-        // Click event for the send button
-        $(document).on("click", "#btnSend", function () {
-            sendMessage();
-        });
-
-        // Periodic function to load chat messages
-        function loadChat() {
-            $.post({
-                url: "../ajax/LOADCHAT_LANDOWNER.php",
-                data: { userid: userid }
-            }).done(function (data) {
-                // Reverse the order of chat messages before inserting
-                $('#loadchat').html(data).scrollTop($('#loadchat')[0].scrollHeight);
-            });
-        }
-
-        // Initial load of chat messages
-        loadChat();
-
-        // Periodic function to load chat messages
-        setInterval(function () {
-            loadChat();
-        }, 1000);
-    });
-</script>
 
     </body>
 </html>

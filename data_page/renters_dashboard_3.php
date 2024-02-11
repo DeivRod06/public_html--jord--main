@@ -49,7 +49,7 @@ $userid = $_SESSION['tenant']['userid'];
     <!-- Template Main CSS File -->
     <link href="../data_style/assets/css/style.css" rel="stylesheet">
     <!-- Main CSS Style -->
-    <link rel="stylesheet" type="text/css" href="../data_style/styles-renters.css">
+    <link rel="stylesheet" type="text/css" href="../data_style/style-renters.css">
 
     <!-- ======================================================= -->
 
