@@ -41,7 +41,7 @@ if (mysqli_num_rows($sql) > 0) {
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-    <body class="chat-body">
+    <body class="chat-landbody">
         <section class="main">
             <div class="wrapper" id="container">
                 <header>
