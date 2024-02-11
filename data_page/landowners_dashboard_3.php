@@ -9,22 +9,22 @@ if (!isset($_SESSION["land"])) {
 
 $userid = isset($_GET['userid']) ? $_GET['userid'] : null;
 
-if (!$userid) {
-    // Handle the case where no userid is provided in the URL
-    header("Location: landowners_dashboard_5.php");
-}
+// if (!$userid) {
+//     // Handle the case where no userid is provided in the URL
+//     header("Location: landowners_dashboard_5.php");
+// }
 
 // Fetch user details based on the provided userid
-$sql = mysqli_query($conn, "SELECT ra.f_name, ra.s_name
-                            FROM tbl_renters_account ra
-                            WHERE ra.userid = $userid");
+// $sql = mysqli_query($conn, "SELECT ra.f_name, ra.s_name
+//                             FROM tbl_renters_account ra
+//                             WHERE ra.userid = $userid");
 
-if (mysqli_num_rows($sql) > 0) {
-    $row = mysqli_fetch_assoc($sql);
-} else {
-    // Handle the case where no user is found with the given userid
-    $row = array(); // Initialize $row as an empty array
-}
+// if (mysqli_num_rows($sql) > 0) {
+//     $row = mysqli_fetch_assoc($sql);
+// } else {
+//     // Handle the case where no user is found with the given userid
+//     $row = array(); // Initialize $row as an empty array
+// }
 ?>
 
 
@@ -35,21 +35,21 @@ if (mysqli_num_rows($sql) > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ResiHive - Contact</title>
     <link rel="icon" type="image/x-icon" href="..\data_image\favicon.png">
-    <link rel="stylesheet" type="text/css" href="..\data_style\styles-renters.css">
+    <link rel="stylesheet" type="text/css" href="..\data_style\styles-land.css">
 
     <script src="https://kit.fontawesome.com/4d86b94a8a.js" crossorigin="anonymous"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-    <body class="chat-landbody">
+    <body class="chat-land_body">
+
+        <?php include 'navbar_land.php'; ?>
+
         <section class="main">
             <div class="wrapper" id="container">
                 <header>
 
                     <div class="title">
-                        <a href="../data_page/landowners_dashboard_5.php" class="back-icon">
-                            <img src="../data_image/buutonlogo.png" alt="Back">
-                        </a>
                         <h1>Chat</h1>
                     </div>
                     
@@ -83,7 +83,7 @@ if (mysqli_num_rows($sql) > 0) {
                             <img src="..\data_style\assets\profile\<?php echo $row['profile_img']; ?>" alt="Profile Image">
                             <div class="details">
                                 <?php if (!empty($row)): ?>
-                                    <span><a><?php echo $row['f_name']. " " . $row['s_name'] ?></a></span>
+                                    <span><a style="color:white"><?php echo $row['f_name']. " " . $row['s_name'] ?></a></span>
                                     <!-- <p><?php echo $row['msg_status']; ?></p> -->
                                     <div class="active_user">
                                         <div class="status-dot"><i class="fa-solid fa-circle"></i></div>
@@ -170,18 +170,7 @@ if (mysqli_num_rows($sql) > 0) {
 
             </div>
         </section>
-
-        <footer>
-        <div class="watermark">
-                <p>by &copy;ResiHive 2023</p>
-            </div>
-        </footer>
-
-
-        
         <script src="..\jscripts\chatBoxFeat.js"></script>
-
-        
 
         <script>
             $(document).ready(function () {

@@ -47,7 +47,7 @@ if (!isset($_SESSION["land"])) {
             <h6>My Tenants</h6>
             <ul>
                 <li class="active"><a href="..\data_page\landowners_dashboard_5.php">Manage Tenants</a></li>
-                <li><a href="..\data_page\landowners_dashboard_6.php">Visit Schedules</a></li>
+                <li><a href="..\data_page\landowners_dashboard_3.php">Messages</a></li>
             </ul><hr>
         </div>
         <div class="dash1">

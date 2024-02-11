@@ -286,7 +286,7 @@ if ($resultRentalOptions->num_rows > 0) {
                 // Periodic function to load chat messages
                 setInterval(function () {
                     loadChat();
-                }, 1000);
+                }, 13);
 
                 function scrollToBottom() {
                     $('#loadchat').scrollTop($('#loadchat')[0].scrollHeight);

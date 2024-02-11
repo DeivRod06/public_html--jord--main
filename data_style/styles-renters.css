@@ -948,8 +948,8 @@ header {
   margin: 0;
 }
 
-.chat-landbody {
-  height: 150vh;
+.chat-land_body {
+  height: 140vh;
   overflow: hidden;
   margin: 0;
 }
